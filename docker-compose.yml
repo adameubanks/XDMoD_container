@@ -7,7 +7,7 @@ services:
       - 3306:3306
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: your_root_password
 
   xdmod_container:
     build:
@@ -17,10 +17,12 @@ services:
     restart: no
     ports:
       - 8080:8080
+      - 443:443
     depends_on:
       - xdmod_db
     environment:
       DB_HOST: xdmod_db
       DB_PORT: 3306
       DB_USER: root
-      DB_PASSWORD: password
+      DB_PASSWORD: your_root_password
+      MYSQL_ROOT_PASSWORD: your_root_password
