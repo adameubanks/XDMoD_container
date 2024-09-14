@@ -51,10 +51,7 @@ RUN wget ${XDMOD_RPM_URL} -O /tmp/xdmod.rpm && \
     dnf -y install /tmp/xdmod.rpm --skip-broken && \
     rm -f /tmp/xdmod.rpm
 
-# Copy the SQL setup file to the Docker image
-COPY /config/xdmod-db-setup.sql xdmod-db-setup.sql
-
-# Copy the Apache configuration file
+# Copy Apache configuration file
 COPY /config/xdmod.conf /etc/httpd/conf.d/xdmod.conf
 
 # XDMoD uses an Apache virtual host on port 8080
@@ -63,12 +60,6 @@ EXPOSE 8080/tcp 443
 # Copy the entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Ensure mount points/directories exist for the data ingest pipeline
-RUN mkdir --parents --mode=0755 /var/lib/XDMoD-ingest-queue/in && \
-    mkdir --parents --mode=0755 /var/lib/XDMoD-ingest-queue/out && \
-    mkdir --parents --mode=0755 /var/lib/XDMoD-ingest-queue/error && \
-    mkdir -p /var/lib/mysql && chown -R mysql:mysql /var/lib/mysql && chmod -R 755 /var/lib/mysql
 
 # Set the entrypoint to the entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
